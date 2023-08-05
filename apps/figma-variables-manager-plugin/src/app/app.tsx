@@ -1,14 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useCallback } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { getFormattedConfig } from "@fvm/core";
-import type { VariablesConfig } from "@fvm/core";
 import { FigmaMessage } from "../messages";
 import { processConfigFSM } from "./processConfig.fsm";
 import { useMachine } from "@xstate/react";
-// TODO:
-// 1. Create collection
-// 2. Create Variable
 
 function App() {
   const [machineState, machineSend] = useMachine(processConfigFSM, {
@@ -44,9 +40,6 @@ function App() {
     },
   });
 
-  const [collectionName, setCollectionName] = useState("");
-  const [config, setConfig] = useState<VariablesConfig | null>(null);
-
   const onReadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = document.getElementById("file-selector") as HTMLInputElement;
     if (input.files && input.files[0]) {
@@ -62,7 +55,6 @@ function App() {
   const processConfig = async (configString: string) => {
     getFormattedConfig(configString)
       .then((config) => {
-        setConfig(config);
         machineSend({ type: "ON_READ_CONFIG", payload: { config } });
       })
       .catch((err) => {
@@ -74,29 +66,31 @@ function App() {
     machineSend({ type: "ON_CREATE_COLLECTION" });
   };
 
-  const figmaMessageListener = (event: MessageEvent) => {
-    console.log("message from figma", event);
-    const message = event.data.pluginMessage as FigmaMessage;
+  const figmaMessageListener = useCallback(
+    (event: MessageEvent) => {
+      const message = event.data.pluginMessage as FigmaMessage;
 
-    if (message.type === "return-collection-id") {
-      console.log("colection id", message.payload.collectionId);
-      machineSend({
-        type: "ON_FINISH_CREATE_COLLECTION",
-        payload: {
-          collectionId: message.payload.collectionId,
-          collectionModeId: message.payload.collectionModeId,
-        },
-      });
-    }
-    if (
-      message.type === "error-create-collection" ||
-      message.type === "error-create-variable"
-    ) {
-      machineSend({
-        type: "ON_ERROR",
-      });
-    }
-  };
+      if (message.type === "return-collection-id") {
+        console.log("colection id", message.payload.collectionId);
+        machineSend({
+          type: "ON_FINISH_CREATE_COLLECTION",
+          payload: {
+            collectionId: message.payload.collectionId,
+            collectionModeId: message.payload.collectionModeId,
+          },
+        });
+      }
+      if (
+        message.type === "error-create-collection" ||
+        message.type === "error-create-variable"
+      ) {
+        machineSend({
+          type: "ON_ERROR",
+        });
+      }
+    },
+    [machineSend]
+  );
 
   useEffect(() => {
     window.addEventListener("message", figmaMessageListener);
@@ -111,8 +105,7 @@ function App() {
 
   return (
     <div className="bg-red-100">
-      <h1 className="heading">This is app</h1>
-      <input type="text" onChange={(e) => setCollectionName(e.target.value)} />
+      <h1 className="heading">Convert JSON to Figma Variable</h1>
       <button onClick={onCreateVariables}>Create collection</button>
 
       <input

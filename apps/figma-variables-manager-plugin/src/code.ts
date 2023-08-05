@@ -41,8 +41,6 @@ figma.ui.onmessage = async (msg) => {
       message.payload.collectionName ?? ""
     );
 
-    // collection.addMode("default");
-
     const returnedMessage: Extract<
       FigmaMessage,
       { type: "return-collection-id" }
@@ -55,46 +53,6 @@ figma.ui.onmessage = async (msg) => {
     };
 
     figma.ui.postMessage(returnedMessage);
-
-    console.log("message", msg);
-    // message.payload.variables.forEach((variable) => {
-    //   console.log("variable", variable);
-    //   let createdVariable = figma.variables.createVariable(
-    //     variable.name,
-    //     collection.id,
-    //     variable.type
-    //   );
-
-    //   createdVariable.setValueForMode(
-    //     collection.modes[0].modeId,
-    //     variable.value
-    //   );
-    // });
-
-    // const createdVars = [];
-    // for (const v in message.payload.variables) {
-    //   console.log("v", v);
-    //   const variable = message.payload.variables[v];
-    //   let createdVariable = figma.variables.createVariable(
-    //     variable.name,
-    //     collection.id,
-    //     variable.type
-    //   );
-    //   createdVars.push(createdVariable);
-
-    //   // await createdVariable.setValueForMode(
-    //   //   collection.modes[0].modeId,
-    //   //   variable.value
-    //   // );
-    // }
-
-    // console.log("createdVars", createdVars);
-    // createdVars.forEach(async (variable, idx) => {
-    //   variable.setValueForMode(
-    //     collection.modes[0].modeId,
-    //     message.payload.variables[idx].value
-    //   );
-    // });
   }
 
   if (msg.type === "create-variable") {
