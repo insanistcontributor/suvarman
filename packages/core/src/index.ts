@@ -7,14 +7,14 @@ export const schema = z.object({
       name: z.string(),
       value: z.string(),
       description: z.optional(z.string()),
-      type: z.string(),
+      type: z.enum(["COLOR", "BOOLEAN", "FLOAT", "STRING"]),
     })
   ),
 });
 
-type Config = z.infer<typeof schema>;
+export type VariablesConfig = z.infer<typeof schema>;
 
-function getFormattedConfig(configString: string): Promise<Config> {
+function getFormattedConfig(configString: string): Promise<VariablesConfig> {
   return new Promise((resolve, reject) => {
     try {
       const parsed = schema.parse(JSON.parse(configString));

@@ -1,4 +1,4 @@
-import { core } from "@fvm/core";
+import type { FigmaMessage } from "./messages";
 
 // This plugin will open a window to prompt the user to enter a number, and
 // it will then create that many rectangles on the screen.
@@ -14,9 +14,10 @@ figma.showUI(__html__);
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
-figma.ui.onmessage = (msg) => {
+figma.ui.onmessage = async (msg) => {
   // One way of distinguishing between different types of messages sent from
   // your HTML page is to use an object with a "type" property like this.
+  console.log("msg", msg);
   if (msg.type === "create-rectangles") {
     const nodes: SceneNode[] = [];
     for (let i = 0; i < msg.count; i++) {
@@ -28,6 +29,20 @@ figma.ui.onmessage = (msg) => {
     }
     figma.currentPage.selection = nodes;
     figma.viewport.scrollAndZoomIntoView(nodes);
+  }
+
+  if (msg.type === "create-variable-collection") {
+    const message = msg as Extract<
+      FigmaMessage,
+      { type: "create-variable-collection" }
+    >;
+
+    figma.variables.createVariableCollection(
+      message.payload.collectionName ?? ""
+    );
+  }
+  if (msg.type === "create-variable") {
+    const payload = msg.payload;
   }
 
   // Make sure to close the plugin when you're done. Otherwise the plugin will
