@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { getFormattedConfig } from "@fvm/core";
@@ -40,9 +40,12 @@ function App() {
     },
   });
 
+  const [file, setFile] = useState<File | null>();
+
   const onReadFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const input = document.getElementById("file-selector") as HTMLInputElement;
     if (input.files && input.files[0]) {
+      setFile(input.files[0]);
       const reader = new FileReader();
       reader.onload = (e) => {
         const text = e.target?.result as string;
@@ -104,18 +107,79 @@ function App() {
   }, [machineState.value]);
 
   return (
-    <div className="bg-red-100">
+    <div className="p-4">
       <h1 className="heading">Convert JSON to Figma Variable</h1>
-      <button onClick={onCreateVariables}>Create collection</button>
-
-      <input
+      {/* <input
         id="file-selector"
         type="file"
         multiple={false}
         accept=".json"
         onChange={(e) => onReadFile(e)}
         onClick={() => console.log("asdf")}
-      />
+      /> */}
+
+      <div className="col-span-full">
+        <label
+          htmlFor="config-name"
+          className="block text-sm font-medium leading-6 text-gray-900"
+        >
+          Config JSON
+        </label>
+
+        <div className="mt-2">
+          <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
+            {/* <input
+              type="text"
+              name="config-name"
+              id="config-name"
+              className="block flex-1 border-0 bg-transparent py-1.5 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+              placeholder="Select file"
+              value={file?.name}
+              disabled
+            /> */}
+            <div
+              // type="text"
+              // name="config-name"
+              // id="config-name"
+              className="block flex-1 border-0 bg-transparent py-1.5 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6"
+              // placeholder="Select file"
+
+              // disabled
+            >
+              {file?.name ?? "Select file"}
+            </div>
+          </div>
+        </div>
+        <div className="my-2 w-full justify-end flex">
+          <label
+            htmlFor="file-selector"
+            className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500 text-sm"
+          >
+            <span>Select config file (.json)</span>
+            {/* <span className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600">
+              <span>Select config file (.json)</span>
+            </span> */}
+            <input
+              type="file"
+              className="sr-only"
+              id="file-selector"
+              multiple={false}
+              accept=".json"
+              onChange={(e) => onReadFile(e)}
+              onClick={() => console.log("asdf")}
+            />
+          </label>
+        </div>
+      </div>
+
+      <div className="mt-6 w-full ">
+        <button
+          onClick={onCreateVariables}
+          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+        >
+          Create Variable
+        </button>
+      </div>
     </div>
   );
 }
