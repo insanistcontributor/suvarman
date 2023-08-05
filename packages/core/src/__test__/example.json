@@ -1,10 +1,10 @@
 {
-  "collectionName": "Example Collection",
+  "collectionName": "Imported collection",
   "variables": [
     {
       "name": "color variable",
       "type": "COLOR",
-      "value": "123123"
+      "value": "#000"
     },
     {
       "name": "color 2",
@@ -17,7 +17,37 @@
       "value": "asdfasdfasdf"
     },
     {
+      "name": "number varialbl222",
+      "type": "FLOAT",
+      "value": 0.123
+    },
+    {
       "name": "number varialbl",
+      "type": "FLOAT",
+      "value": 0.123
+    },
+    {
+      "name": "number 111",
+      "type": "FLOAT",
+      "value": 0.123
+    },
+    {
+      "name": "number 7",
+      "type": "FLOAT",
+      "value": 0.123
+    },
+    {
+      "name": "number 5",
+      "type": "FLOAT",
+      "value": 0.123
+    },
+    {
+      "name": "number2",
+      "type": "FLOAT",
+      "value": 0.123
+    },
+    {
+      "name": "number3",
       "type": "FLOAT",
       "value": 0.123
     }

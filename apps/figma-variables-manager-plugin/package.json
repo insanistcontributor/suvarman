@@ -12,6 +12,7 @@
   "dependencies": {
     "@fvm/core": "*",
     "@xstate/react": "^3.2.2",
+    "react-icons": "^4.10.1",
     "xstate": "^4.38.2"
   },
   "devDependencies": {
