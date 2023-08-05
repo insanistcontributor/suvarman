@@ -65,6 +65,11 @@
     minimatch "^3.0.4"
     strip-json-comments "^3.1.1"
 
+"@figma/plugin-typings@^1.72.0":
+  version "1.72.0"
+  resolved "https://registry.yarnpkg.com/@figma/plugin-typings/-/plugin-typings-1.72.0.tgz#a6cba4940e324d8842a5b9455e576ddda0335fbd"
+  integrity sha512-SRW8qQOLf/QOtgP7OsUfw4oD6Z+tbenLR2PgNXGSh2SJohcnucIEEc7An5Wd5qTl35xfC4TmZE0YpTGMknVpgw==
+
 "@humanwhocodes/config-array@^0.5.0":
   version "0.5.0"
   resolved "https://registry.yarnpkg.com/@humanwhocodes/config-array/-/config-array-0.5.0.tgz#1407967d4c6eecd7388f83acf1eaf4d0c6e58ef9"
@@ -3299,6 +3304,11 @@ typed-array-length@^1.0.4:
     call-bind "^1.0.2"
     for-each "^0.3.3"
     is-typed-array "^1.1.9"
+
+typescript@*:
+  version "5.1.6"
+  resolved "https://registry.yarnpkg.com/typescript/-/typescript-5.1.6.tgz#02f8ac202b6dad2c0dd5e0913745b47a37998274"
+  integrity sha512-zaWCozRZ6DLEWAWFrVDz1H6FVXzUSfTy5FUMWsQlU8Ym5JP9eO4xkTIROFCQvhQf61z6O/G6ugw3SgAnvvm+HA==
 
 typescript@^4.5.2, typescript@^4.5.3:
   version "4.9.5"
