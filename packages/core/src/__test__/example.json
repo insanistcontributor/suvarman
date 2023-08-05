@@ -1,0 +1,15 @@
+{
+  "collectionName": "Example Collection",
+  "variables": [
+    {
+      "name": "color variable",
+      "type": "COLOR",
+      "value": "#123123"
+    },
+    {
+      "name": "number varialbl",
+      "type": "FLOAT",
+      "value": "0.123"
+    }
+  ]
+}
