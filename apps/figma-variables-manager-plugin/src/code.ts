@@ -1,3 +1,5 @@
+import type { FigmaMessage } from "./messages";
+
 // This plugin will open a window to prompt the user to enter a number, and
 // it will then create that many rectangles on the screen.
 
@@ -12,15 +14,16 @@ figma.showUI(__html__);
 // Calls to "parent.postMessage" from within the HTML page will trigger this
 // callback. The callback will be passed the "pluginMessage" property of the
 // posted message.
-figma.ui.onmessage = msg => {
+figma.ui.onmessage = async (msg) => {
   // One way of distinguishing between different types of messages sent from
   // your HTML page is to use an object with a "type" property like this.
-  if (msg.type === 'create-rectangles') {
+  console.log("msg", msg);
+  if (msg.type === "create-rectangles") {
     const nodes: SceneNode[] = [];
     for (let i = 0; i < msg.count; i++) {
       const rect = figma.createRectangle();
       rect.x = i * 150;
-      rect.fills = [{type: 'SOLID', color: {r: 1, g: 0.5, b: 0}}];
+      rect.fills = [{ type: "SOLID", color: { r: 1, g: 0.5, b: 0 } }];
       figma.currentPage.appendChild(rect);
       nodes.push(rect);
     }
@@ -28,7 +31,52 @@ figma.ui.onmessage = msg => {
     figma.viewport.scrollAndZoomIntoView(nodes);
   }
 
+  if (msg.type === "create-variable-collection") {
+    const message = msg as Extract<
+      FigmaMessage,
+      { type: "create-variable-collection" }
+    >;
+
+    const collection = figma.variables.createVariableCollection(
+      message.payload.collectionName ?? ""
+    );
+
+    const returnedMessage: Extract<
+      FigmaMessage,
+      { type: "return-collection-id" }
+    > = {
+      type: "return-collection-id",
+      payload: {
+        collectionId: collection.id,
+        collectionModeId: collection.modes[0].modeId,
+      },
+    };
+
+    figma.ui.postMessage(returnedMessage);
+  }
+
+  if (msg.type === "create-variable") {
+    const message = msg as Extract<FigmaMessage, { type: "create-variable" }>;
+
+    const payload = message.payload;
+
+    let createdVariable = figma.variables.createVariable(
+      payload.name,
+      payload.collectionId,
+      payload.type
+    );
+
+    const resolvedValue =
+      payload.type === "COLOR"
+        ? figma.util.rgba(payload.value as string)
+        : payload.value;
+    createdVariable.setValueForMode(
+      message.payload.collectionModeId,
+      resolvedValue
+    );
+  }
+
   // Make sure to close the plugin when you're done. Otherwise the plugin will
   // keep running, which shows the cancel button at the bottom of the screen.
-  figma.closePlugin();
+  // figma.closePlugin();
 };

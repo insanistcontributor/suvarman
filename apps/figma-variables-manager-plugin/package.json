@@ -2,13 +2,18 @@
   "name": "@fvm/plugin",
   "version": "1.0.0",
   "description": "Your Figma Plugin",
-  "main": "code.js",
+  "main": "./dist/code.js",
   "scripts": {
     "build:watch": "webpack --mode=development --watch",
     "build": "webpack --mode=production"
   },
   "author": "Ibe Dwi",
   "license": "MIT",
+  "dependencies": {
+    "@fvm/core": "*",
+    "@xstate/react": "^3.2.2",
+    "xstate": "^4.38.2"
+  },
   "devDependencies": {
     "@figma/plugin-typings": "^1.72.0",
     "autoprefixer": "^10.4.14",
