@@ -1,22 +1,48 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import { getFormattedConfig } from "@fvm/core";
 import type { VariablesConfig } from "@fvm/core";
 import { FigmaMessage } from "../messages";
+import { processConfigFSM } from "./processConfig.fsm";
+import { useMachine } from "@xstate/react";
 // TODO:
 // 1. Create collection
 // 2. Create Variable
 
 function App() {
-  const testSend = () => {
-    console.log("Test send");
-    console.log("parent", parent);
-    parent.postMessage(
-      { pluginMessage: { type: "create-rectangles", count: 2 } },
-      "*"
-    );
-  };
+  const [machineState, machineSend] = useMachine(processConfigFSM, {
+    actions: {
+      onCreateCollection: (ctx) => {
+        const createCollectionMessage: FigmaMessage = {
+          type: "create-variable-collection",
+          payload: {
+            collectionName:
+              ctx.config?.collectionName || "Default collection name",
+          },
+        };
+
+        parent.postMessage({ pluginMessage: createCollectionMessage }, "*");
+      },
+      onCreateVariables: (ctx) => {
+        if (ctx.config?.variables && ctx.collectionId != undefined) {
+          ctx.config?.variables.forEach((variable) => {
+            const message: FigmaMessage = {
+              type: "create-variable",
+              payload: {
+                collectionId: ctx.collectionId as string,
+                collectionModeId: ctx.collectionModeId as string,
+                name: variable.name,
+                value: variable.value,
+                type: variable.type,
+              },
+            };
+            parent.postMessage({ pluginMessage: message }, "*");
+          });
+        }
+      },
+    },
+  });
 
   const [collectionName, setCollectionName] = useState("");
   const [config, setConfig] = useState<VariablesConfig | null>(null);
@@ -37,6 +63,7 @@ function App() {
     getFormattedConfig(configString)
       .then((config) => {
         setConfig(config);
+        machineSend({ type: "ON_READ_CONFIG", payload: { config } });
       })
       .catch((err) => {
         alert("Error parsing config file");
@@ -44,15 +71,43 @@ function App() {
   };
 
   const onCreateVariables = () => {
-    const createCollectionMessage: FigmaMessage = {
-      type: "create-variable-collection",
-      payload: {
-        collectionName: config?.collectionName || "Default collection name",
-      },
-    };
-
-    parent.postMessage({ pluginMessage: createCollectionMessage }, "*");
+    machineSend({ type: "ON_CREATE_COLLECTION" });
   };
+
+  const figmaMessageListener = (event: MessageEvent) => {
+    console.log("message from figma", event);
+    const message = event.data.pluginMessage as FigmaMessage;
+
+    if (message.type === "return-collection-id") {
+      console.log("colection id", message.payload.collectionId);
+      machineSend({
+        type: "ON_FINISH_CREATE_COLLECTION",
+        payload: {
+          collectionId: message.payload.collectionId,
+          collectionModeId: message.payload.collectionModeId,
+        },
+      });
+    }
+    if (
+      message.type === "error-create-collection" ||
+      message.type === "error-create-variable"
+    ) {
+      machineSend({
+        type: "ON_ERROR",
+      });
+    }
+  };
+
+  useEffect(() => {
+    window.addEventListener("message", figmaMessageListener);
+    return () => {
+      window.removeEventListener("message", figmaMessageListener);
+    };
+  }, [figmaMessageListener]);
+
+  useEffect(() => {
+    console.log("machine state changed :: ", machineState.value);
+  }, [machineState.value]);
 
   return (
     <div className="bg-red-100">
@@ -66,6 +121,7 @@ function App() {
         multiple={false}
         accept=".json"
         onChange={(e) => onReadFile(e)}
+        onClick={() => console.log("asdf")}
       />
     </div>
   );

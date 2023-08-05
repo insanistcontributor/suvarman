@@ -24,7 +24,7 @@ describe("core", () => {
         {
           name: "number varialbl",
           type: "FLOAT",
-          value: "0.123",
+          value: 0.123,
         },
       ],
     });

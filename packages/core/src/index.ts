@@ -5,7 +5,7 @@ export const schema = z.object({
   variables: z.array(
     z.object({
       name: z.string(),
-      value: z.string(),
+      value: z.union([z.string(), z.number()]),
       description: z.optional(z.string()),
       type: z.enum(["COLOR", "BOOLEAN", "FLOAT", "STRING"]),
     })

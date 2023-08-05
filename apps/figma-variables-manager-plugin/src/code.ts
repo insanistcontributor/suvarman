@@ -37,15 +37,88 @@ figma.ui.onmessage = async (msg) => {
       { type: "create-variable-collection" }
     >;
 
-    figma.variables.createVariableCollection(
+    const collection = figma.variables.createVariableCollection(
       message.payload.collectionName ?? ""
     );
+
+    // collection.addMode("default");
+
+    const returnedMessage: Extract<
+      FigmaMessage,
+      { type: "return-collection-id" }
+    > = {
+      type: "return-collection-id",
+      payload: {
+        collectionId: collection.id,
+        collectionModeId: collection.modes[0].modeId,
+      },
+    };
+
+    figma.ui.postMessage(returnedMessage);
+
+    console.log("message", msg);
+    // message.payload.variables.forEach((variable) => {
+    //   console.log("variable", variable);
+    //   let createdVariable = figma.variables.createVariable(
+    //     variable.name,
+    //     collection.id,
+    //     variable.type
+    //   );
+
+    //   createdVariable.setValueForMode(
+    //     collection.modes[0].modeId,
+    //     variable.value
+    //   );
+    // });
+
+    // const createdVars = [];
+    // for (const v in message.payload.variables) {
+    //   console.log("v", v);
+    //   const variable = message.payload.variables[v];
+    //   let createdVariable = figma.variables.createVariable(
+    //     variable.name,
+    //     collection.id,
+    //     variable.type
+    //   );
+    //   createdVars.push(createdVariable);
+
+    //   // await createdVariable.setValueForMode(
+    //   //   collection.modes[0].modeId,
+    //   //   variable.value
+    //   // );
+    // }
+
+    // console.log("createdVars", createdVars);
+    // createdVars.forEach(async (variable, idx) => {
+    //   variable.setValueForMode(
+    //     collection.modes[0].modeId,
+    //     message.payload.variables[idx].value
+    //   );
+    // });
   }
+
   if (msg.type === "create-variable") {
-    const payload = msg.payload;
+    const message = msg as Extract<FigmaMessage, { type: "create-variable" }>;
+
+    const payload = message.payload;
+
+    let createdVariable = figma.variables.createVariable(
+      payload.name,
+      payload.collectionId,
+      payload.type
+    );
+
+    const resolvedValue =
+      payload.type === "COLOR"
+        ? figma.util.rgba(payload.value as string)
+        : payload.value;
+    createdVariable.setValueForMode(
+      message.payload.collectionModeId,
+      resolvedValue
+    );
   }
 
   // Make sure to close the plugin when you're done. Otherwise the plugin will
   // keep running, which shows the cancel button at the bottom of the screen.
-  figma.closePlugin();
+  // figma.closePlugin();
 };

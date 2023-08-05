@@ -4,12 +4,22 @@
     {
       "name": "color variable",
       "type": "COLOR",
-      "value": "#123123"
+      "value": "123123"
+    },
+    {
+      "name": "color 2",
+      "type": "COLOR",
+      "value": "123123"
+    },
+    {
+      "name": "some string value",
+      "type": "STRING",
+      "value": "asdfasdfasdf"
     },
     {
       "name": "number varialbl",
       "type": "FLOAT",
-      "value": "0.123"
+      "value": 0.123
     }
   ]
 }
