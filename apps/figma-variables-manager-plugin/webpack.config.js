@@ -45,10 +45,11 @@ module.exports = (env, argv) => ({
       },
       /**
        * Enables including CSS by doing "import './file.css'" in your TypeScript code.
+       * `postcss-loader` enable TailwindCSS support.
        */
       {
         test: /\.css$/,
-        use: ["style-loader", { loader: "css-loader" }],
+        use: ["style-loader", { loader: "css-loader" }, "postcss-loader"],
       },
     ],
   },
