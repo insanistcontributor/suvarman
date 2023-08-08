@@ -1,0 +1,30 @@
+{
+  "collectionName": "Your collection name",
+  "variables": [
+    {
+      "name": "Neutral Black",
+      "type": "COLOR",
+      "value": "#000"
+    },
+    {
+      "name": "Neutral White",
+      "type": "COLOR",
+      "value": "#FFF"
+    },
+    {
+      "name": "en/title",
+      "type": "STRING",
+      "value": "This is title in English"
+    },
+    {
+      "name": "padding/1",
+      "type": "FLOAT",
+      "value": 16
+    },
+    {
+      "name": "padding/2",
+      "type": "FLOAT",
+      "value": 20
+    }
+  ]
+}
