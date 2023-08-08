@@ -1,11 +1,12 @@
 import React, { useEffect, useCallback, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
-import { getFormattedConfig } from "@fvm/core";
+import { getFormattedConfig } from "@suvarman/core";
 import { FigmaMessage } from "../messages";
 import { processConfigFSM } from "./processConfig.fsm";
 import { useMachine } from "@xstate/react";
 import { HiOutlineCog } from "react-icons/hi";
+import { SuvarmanLogo } from "./SuvarmanLogo";
 
 function App() {
   const [machineState, machineSend] = useMachine(processConfigFSM, {
@@ -110,11 +111,10 @@ function App() {
   return (
     <div className="p-4">
       <div className="w-full flex flex-col items-center mb-5">
-        <HiOutlineCog size={50} className="animate-spin" />
-        <h1 className="text-xl">Variable Manager</h1>
-        <h1 className="text-md text-gray-400">
-          Convert JSON to Figma Variable
-        </h1>
+        {/* <HiOutlineCog size={50} className="animate-spin" /> */}
+        <SuvarmanLogo size={50} />
+        <h1 className="text-xl">Suvarman</h1>
+        <h1 className="text-md text-gray-400">Super Variables Manager</h1>
       </div>
 
       <div className="col-span-full">

@@ -1,5 +1,5 @@
 {
-  "name": "@fvm/plugin",
+  "name": "@suvarman/plugin",
   "version": "1.0.0",
   "description": "Your Figma Plugin",
   "main": "./dist/code.js",
@@ -10,7 +10,7 @@
   "author": "Ibe Dwi",
   "license": "MIT",
   "dependencies": {
-    "@fvm/core": "*",
+    "@suvarman/core": "*",
     "@xstate/react": "^3.2.2",
     "react-icons": "^4.10.1",
     "xstate": "^4.38.2"

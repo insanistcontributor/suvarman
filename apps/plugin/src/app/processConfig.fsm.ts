@@ -1,4 +1,4 @@
-import { VariablesConfig } from "@fvm/core";
+import { VariablesConfig } from "@suvarman/core";
 import { createMachine, assign } from "xstate";
 
 type MachineContext = {
