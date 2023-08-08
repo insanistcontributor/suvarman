@@ -1,4 +1,5 @@
 {
+  "name": "figma-variables-manager",
   "private": true,
   "scripts": {
     "build": "turbo run build",
@@ -13,7 +14,6 @@
     "prettier": "^2.5.1",
     "turbo": "latest"
   },
-  "name": "figma-variables-manager",
   "packageManager": "yarn@1.22.19",
   "workspaces": [
     "apps/*",
