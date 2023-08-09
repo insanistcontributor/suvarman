@@ -5,8 +5,8 @@ import { getFormattedConfig } from "@suvarman/core";
 import { FigmaMessage } from "../messages";
 import { processConfigFSM } from "./processConfig.fsm";
 import { useMachine } from "@xstate/react";
-import { HiOutlineCog } from "react-icons/hi";
 import { SuvarmanLogo } from "./SuvarmanLogo";
+import { cn } from "../utils/cn";
 
 function App() {
   const [machineState, machineSend] = useMachine(processConfigFSM, {
@@ -104,56 +104,79 @@ function App() {
     };
   }, [figmaMessageListener]);
 
-  useEffect(() => {
-    console.log("machine state changed :: ", machineState.value);
-  }, [machineState.value]);
-
   return (
-    <div className="p-4">
-      <div className="w-full flex flex-col items-center mb-5">
-        {/* <HiOutlineCog size={50} className="animate-spin" /> */}
-        <SuvarmanLogo size={50} />
-        <h1 className="text-xl">Suvarman</h1>
-        <h1 className="text-md text-gray-400">Super Variables Manager</h1>
-      </div>
+    <div className="h-full flex flex-col justify-between">
+      <div className="p-4">
+        <div className="w-full flex flex-col items-center mb-5">
+          <SuvarmanLogo size={50} />
+          <h1 className="text-xl">Suvarman</h1>
+          <h1 className="text-md text-gray-400">Super Variables Manager</h1>
+        </div>
 
-      <div className="col-span-full">
-        <p className="block text-sm font-medium leading-6 text-gray-900">
-          Config file
-        </p>
+        <div className="col-span-full">
+          <p className="block text-sm font-medium leading-6 text-gray-900">
+            Config file
+          </p>
 
-        <div className="mt-2">
-          <div className="flex rounded-md shadow-sm ring-1 ring-inset ring-gray-300 focus-within:ring-2 focus-within:ring-inset focus-within:ring-indigo-600 sm:max-w-md">
-            <div className="block flex-1 border-0 bg-transparent py-1.5 pl-3 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6">
-              {file?.name ?? "Select file"}
+          <div className="mt-2">
+            <div className="border border-gray-400 flex flex-row rounded-md shadow-sm sm:max-w-md items-center px-3">
+              <div className="flex-1 border-0 bg-transparent py-1.5 text-gray-900 placeholder:text-gray-400 focus:ring-0 sm:text-sm sm:leading-6">
+                {file?.name ?? "Select file"}
+              </div>
+
+              <div className="my-2 justify-end flex">
+                <label
+                  htmlFor="file-selector"
+                  className={cn(
+                    "p-2 flex cursor-pointer rounded-md font-semibold text-white text-xs",
+                    "bg-gray-800 hover:bg-gray-600 focus-within:outline-none focus-within:ring-0 focus-within:ring-offset-0 "
+                  )}
+                >
+                  <span>Select config file</span>
+                  <input
+                    type="file"
+                    className="sr-only"
+                    id="file-selector"
+                    multiple={false}
+                    accept=".json"
+                    onChange={(e) => onReadFile(e)}
+                  />
+                </label>
+              </div>
             </div>
           </div>
         </div>
-        <div className="my-2 w-full justify-end flex">
-          <label
-            htmlFor="file-selector"
-            className="relative cursor-pointer rounded-md bg-white font-semibold text-indigo-600 focus-within:outline-none focus-within:ring-2 focus-within:ring-indigo-600 focus-within:ring-offset-2 hover:text-indigo-500 text-sm"
+
+        <div className="mt-4 w-full flex justify-end">
+          <button
+            onClick={onCreateVariables}
+            className={cn(
+              "rounded-md bg-indigo-600 px-3 py-2 text-sm text-white",
+              "flex cursor-pointer rounded-md font-semibold",
+              "bg-gray-800 hover:bg-gray-600 focus-within:outline-none focus-within:ring-0 focus-within:ring-offset-0",
+              "disabled:opacity-50 disabled:cursor-not-allowed"
+            )}
+            disabled={file == null}
           >
-            <span>Select config file (.json)</span>
-            <input
-              type="file"
-              className="sr-only"
-              id="file-selector"
-              multiple={false}
-              accept=".json"
-              onChange={(e) => onReadFile(e)}
-            />
-          </label>
+            Create Variables
+          </button>
         </div>
       </div>
-
-      <div className="mt-6 w-full flex justify-end">
-        <button
-          onClick={onCreateVariables}
-          className="rounded-md bg-indigo-600 px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
+      <div className="px-4 py-3 border-t border-gray-300 flex flex-row justify-between">
+        <a
+          href="https://ibedwi.notion.site/Suvarman-Docs-2647e1fafd404fcfa889baa6797fe38d"
+          target="_blank"
+          className="text-sm underline hover:opacity-80"
         >
-          Create Variable
-        </button>
+          Read Docs
+        </a>
+        <a
+          href="https://ibedwi.notion.site/Changelog-883550a93d35443f89e784e421b3d578"
+          target="_blank"
+          className="text-sm underline hover:opacity-80"
+        >
+          <span>v0.2.0</span>
+        </a>
       </div>
     </div>
   );
