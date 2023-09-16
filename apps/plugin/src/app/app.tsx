@@ -39,6 +39,18 @@ function App() {
           });
         }
       },
+      onNotifySuccess: () => {
+        const message: FigmaMessage = {
+          type: "notify-success",
+        };
+        parent.postMessage({ pluginMessage: message }, "*");
+      },
+      onNotifyError: (_, event) => {
+        const message: FigmaMessage = {
+          type: "notify-error",
+        };
+        parent.postMessage({ pluginMessage: message }, "*");
+      },
     },
   });
 
@@ -63,7 +75,14 @@ function App() {
         machineSend({ type: "ON_READ_CONFIG", payload: { config } });
       })
       .catch((err) => {
-        alert("Error parsing config file");
+        setFile(null);
+        const message: FigmaMessage = {
+          type: "notify-error",
+          payload: {
+            message: "Error parsing config file. Please recheck your config!",
+          },
+        };
+        parent.postMessage({ pluginMessage: message }, "*");
       });
   };
 

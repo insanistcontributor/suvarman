@@ -63,6 +63,20 @@ figma.ui.onmessage = async (msg) => {
     );
   }
 
+  if (msg.type === "notify-success") {
+    figma.notify("Successfully imported the variables!");
+  }
+
+  if (msg.type === "notify-error") {
+    const message = msg as Extract<FigmaMessage, { type: "notify-error" }>;
+    figma.notify(
+      message?.payload?.message
+        ? message?.payload?.message
+        : "Can't create variables! Unknown error",
+      { error: true }
+    );
+  }
+
   // Make sure to close the plugin when you're done. Otherwise the plugin will
   // keep running, which shows the cancel button at the bottom of the screen.
   // figma.closePlugin();

@@ -17,6 +17,15 @@ export type FigmaMessage =
       };
     }
   | {
+      type: "notify-success";
+    }
+  | {
+      type: "notify-error";
+      payload?: {
+        message: string;
+      };
+    }
+  | {
       type: "return-collection-id";
       payload: {
         collectionId: string;
