@@ -194,7 +194,7 @@ function App() {
           target="_blank"
           className="text-sm underline hover:opacity-80"
         >
-          <span>v0.2.0</span>
+          <span>v0.2.1</span>
         </a>
       </div>
     </div>
